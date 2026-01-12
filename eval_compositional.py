@@ -44,17 +44,7 @@ import itertools
 
 # Import model and diffusion
 from models_compositional import DiT_models_compositional as DiT_models
-try:
-    from unet_models_compositional import UNet_models_compositional as UNet_models
-except ImportError:
-    UNet_models = None
-    print("Warning: UNet compositional models not found (unet_models_compositional).")
-
-# Add SongUNet compositional support
-try:
-    from unet_models_song_compositional import CompositionalSongUNet_models as SongUNet_models
-except ImportError:
-    SongUNet_models = None
+from unet_models_song_compositional import CompositionalSongUNet_models as SongUNet_models
 from diffusion import create_diffusion
 
 SHAPE_NAME_TO_ID = {'circle': 0, 'square': 1, 'triangle': 2, 'diamond': 3}
@@ -276,25 +266,6 @@ def load_model(config, device, active_properties):
             property_dropout_prob=0.0,
             num_shapes=4,
             num_colors=8,
-        )
-    elif architecture == 'unet':
-        # Prepare property configs for UNet
-        property_configs = {
-            'radius': {'embedding_type': 'sinusoidal', 'radius_min': 1.0, 'radius_max': 5.0},
-            'position': {'embedding_type': 'sinusoidal', 'max_position_value': 1.0},
-            'rotation': {'embedding_type': 'circular'},
-            'count': {'max_count': 10},
-            'color': {'num_colors': 8},
-            'shape': {'num_shapes': 4},
-        }
-        
-        model = UNet_models[config['model_size']](
-            input_size=64,
-            in_channels=3,
-            active_properties=active_properties,
-            property_configs=property_configs,
-            conditioning_method=config.get('conditioning_method', 'concat'),
-            class_dropout_prob=0.0
         )
     else:
         model = DiT_models[config['model_size']](

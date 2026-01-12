@@ -19,7 +19,6 @@ from scipy.optimize import minimize_scalar
 
 # Import model components
 from models_rotation import DiT_models_rotation as DiT_models
-from unet_models_rotation import UNet_models_rotation as UNet_models
 from unet_models_song_rotation import SongUNet_Rotation_models as SongUNet_models
 from diffusion import create_diffusion
 from flow_matching import FlowMatching
@@ -846,15 +845,7 @@ def load_model(config, device):
         # For non-VAE models, keep standard settings
         config['use_latent_diffusion'] = False
     
-    if architecture == 'unet':
-        model = UNet_models[config['model_type']](
-            input_size=input_size,
-            in_channels=in_channels,
-            rotation_embedding_type=config.get('rotation_embedding_type', 'circular'),
-            conditioning_method=config.get('conditioning_method', 'concat'),
-            class_dropout_prob=config.get('rotation_dropout_prob', 0.0)
-        ).to(device)
-    elif architecture == 'songunet':
+    if architecture == 'songunet':
         model = SongUNet_models[config['model_type']](
             img_resolution=input_size,
             in_channels=in_channels,
@@ -1131,7 +1122,7 @@ if __name__ == "__main__":
     parser.add_argument("--data-path", type=str, required=True,
                        help="Path to training data directory (contains dataset_metadata.json)")
     parser.add_argument("--model", type=str, default="DiT-S/2",
-                       choices=list(DiT_models.keys()) + list(UNet_models.keys()),
+                       choices=list(DiT_models.keys()) + list(SongUNet_models.keys()),
                        help="Model type")
     parser.add_argument("--image-size", type=int, default=64,
                        help="Image size")

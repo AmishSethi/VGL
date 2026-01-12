@@ -19,12 +19,30 @@ Training models from scratch on these data reveals three consistent patterns:
 
 The code structure of this repository is straightforward:
 
+**Model Architectures:**
 * `models_radius.py`: DiT-based model with continuous radius conditioning for size control experiments.
 * `models_position.py`: DiT model for 2D position control with dual coordinate embedders.
 * `models_rotation.py`: DiT model for rotation angle control with periodic angle handling.
+* `models_count.py`: DiT model adapted for count conditioning.
 * `models_compositional.py`: Unified model for multi-skill compositions (shape, color, count, size, position).
-* `generate_*.py`: Dataset generation scripts for each visual skill with configurable training distributions.
-* `eval_*.py`: Evaluation scripts with skill-specific metrics (IoU for size, pixel distance for position, angle error for rotation, exact match for count).
+* `unet_models_song*.py`: SongUNet architecture variants for each skill.
+
+**Training Scripts:**
+* `train.py`: Training script for radius/size experiments.
+* `train_position.py`: Training script for position experiments.
+* `train_rotation.py`: Training script for rotation experiments.
+* `train_count.py`: Training script for count experiments.
+* `train_compositional.py`: Training script for compositional experiments.
+
+**Dataset Generation:**
+* `generate_radius_dataset.py`, `generate_position_dataset.py`, `generate_rotation_dataset.py`, `generate_count.py`, `generate_compositional_dataset.py`: Dataset generation scripts for each visual skill with configurable training distributions.
+
+**Evaluation:**
+* `eval_radius.py`, `eval_position.py`, `eval_rotation.py`, `eval_count.py`, `eval_compositional.py`: Evaluation scripts with skill-specific metrics.
+
+**Utilities:**
+* `diffusion.py`: DDPM diffusion utilities for training and sampling.
+* `flow_matching.py`: Flow matching training objective and sampling.
 
 ## 1. Setup Environment
 
@@ -71,17 +89,32 @@ Training uses a standard diffusion setup with the DiT-S/2 architecture:
 
 | Parameter | Value |
 | :--- | :--- |
-| Architecture | DiT-S/2 |
+| Architecture | DiT-S/2 or SongUNet |
 | Training epochs | 1000 |
 | Optimizer | AdamW (lr=1e-4) |
 | Noise schedule | Linear (DDPM) |
 | Image size | 64×64 |
 | Conditioning | Linear embedding + concatenation |
 
-To train a model (example for radius):
+**Train models for each skill:**
 ```bash
-python train.py --config configs/radius.yaml --data-path ./data/radius
+# Radius/Size
+python train.py --data-path ./data/radius --architecture dit --model DiT-S/2
+
+# Position
+python train_position.py --data-path ./data/position --architecture dit --model DiT-S/2
+
+# Rotation
+python train_rotation.py --data-path ./data/rotation --architecture dit --model DiT-S/2
+
+# Count
+python train_count.py --data-path ./data/count --architecture dit --model DiT-S/2
+
+# Compositional
+python train_compositional.py --data-path ./data/compositional --architecture dit --model DiT-S/2
 ```
+
+You can also use `--architecture songunet` with SongUNet models (e.g., `SongUNet-S`).
 
 ## 4. Evaluation
 

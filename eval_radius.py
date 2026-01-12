@@ -19,8 +19,7 @@ import seaborn as sns
 from pathlib import Path
 
 # Import model components
-from models import DiT_models_continuous as DiT_models
-from unet_models import UNet_models
+from models_radius import DiT_models_continuous as DiT_models
 from unet_models_song import SongUNet_models
 from diffusion import create_diffusion
 from diffusers.models import AutoencoderKL
@@ -599,19 +598,6 @@ def load_model(config, device):
             if 'enc.64x64_conv.weight' in name:
                 print(f"DEBUG: Model {name} shape: {param.shape}")
                 break
-    elif architecture == 'unet':
-        if model_key not in UNet_models:
-            print(f"Warning: model '{model_key}' not found. Falling back to 'UNet-S'.")
-            model_key = "UNet-S"
-        model = UNet_models[model_key](
-            input_size=input_size,
-            in_channels=in_channels,
-            radius_embedding_type=config['radius_embedding_type'],
-            conditioning_method=config['conditioning_method'],
-            radius_dropout_prob=config['radius_dropout_prob'],
-            null_radius=config['null_radius'],
-            null_embedding_type=config['null_embedding_type']
-        ).to(device)
     else:
         if model_key not in DiT_models:
             print(f"Warning: model '{model_key}' not found. Falling back to 'DiT-S/2'.")

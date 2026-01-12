@@ -53,7 +53,6 @@ from scipy.spatial.distance import cdist
 
 # Import model components
 from models_position import DiT_models_position as DiT_models
-from unet_models_position import UNet_models_position as UNet_models
 from unet_models_song_position import SongUNet_Position_models as SongUNet_models
 from diffusion import create_diffusion
 from diffusers.models import AutoencoderKL
@@ -1279,15 +1278,6 @@ def load_model(config, device):
             position_embedding_type=config['position_embedding_type'],
             conditioning_method=config['conditioning_method'],
             position_dropout_prob=config['position_dropout_prob']
-        ).to(device)
-    elif architecture == 'unet':
-        model = UNet_models[config['model_type']](
-            input_size=input_size,
-            in_channels=in_channels,
-            position_embedding_type=config['position_embedding_type'],
-            conditioning_method=config['conditioning_method'],
-            position_dropout_prob=config['position_dropout_prob'],
-            max_position_value=config['train_max_pos']  # Max position value for the dataset
         ).to(device)
     else:
         model = DiT_models[config['model_type']](
