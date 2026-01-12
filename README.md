@@ -17,7 +17,7 @@ Training models from scratch on these data reveals three consistent patterns:
 
 ## Code Structure
 
-The code structure of this repository is straightforward:
+The code structure of this repository is as follows:
 
 **Model Architectures:**
 * `models_radius.py`: DiT-based model with continuous radius conditioning for size control experiments.
@@ -28,7 +28,7 @@ The code structure of this repository is straightforward:
 * `unet_models_song*.py`: SongUNet architecture variants for each skill.
 
 **Training Scripts:**
-* `train.py`: Training script for radius/size experiments.
+* `train_radius.py`: Training script for radius/size experiments.
 * `train_position.py`: Training script for position experiments.
 * `train_rotation.py`: Training script for rotation experiments.
 * `train_count.py`: Training script for count experiments.
@@ -99,7 +99,7 @@ Training uses a standard diffusion setup with the DiT-S/2 architecture:
 **Train models for each skill:**
 ```bash
 # Radius/Size
-python train.py --data-path ./data/radius --architecture dit --model DiT-S/2
+python train_radius.py --data-path ./data/radius --architecture dit --model DiT-S/2
 
 # Position
 python train_position.py --data-path ./data/position --architecture dit --model DiT-S/2
