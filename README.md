@@ -41,7 +41,7 @@ The code structure of this repository is straightforward:
 * `eval_radius.py`, `eval_position.py`, `eval_rotation.py`, `eval_count.py`, `eval_compositional.py`: Evaluation scripts with skill-specific metrics.
 
 **Utilities:**
-* `diffusion.py`: DDPM diffusion utilities for training and sampling.
+* `diffusion/`: DDPM diffusion utilities for training and sampling (based on OpenAI's diffusion repos).
 * `flow_matching.py`: Flow matching training objective and sampling.
 
 ## 1. Setup Environment
